@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Suvai - Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="left-section">
+        <div class="overlay">
+            <h1>Suvai</h1>
+            <p>Homely Taste. Delivered to Your Doorstep.</p>
+            <p class="sub">Weekly & Monthly Subscription Plans Available</p>
+        </div>
+        <img src="images/delivery.png" class="delivery-boy">
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right-section">
+        <div class="login-card">
+            <h2>Login</h2>
+
+            <input type="text" id="username" placeholder="Username / Email">
+            
+            <div class="password-field">
+                <input type="password" id="password" placeholder="Password">
+                <span onclick="togglePassword()">👁</span>
+            </div>
+
+            <button onclick="login()">Login</button>
+
+            <p class="otp">Login with OTP</p>
+            <p id="message"></p>
+        </div>
+    </div>
+
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>

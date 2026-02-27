@@ -33,8 +33,10 @@ body {
     letter-spacing:3px;
 
     background:linear-gradient(45deg,#ff7e00,#ffcc00);
+    background-clip:text;
     -webkit-background-clip:text;
-    -webkit-text-fill-colour:transparent;
+    color transparent;
+    -webkit-text-fill-color:transparent;
 }
 
 .overlay p {
@@ -129,6 +131,7 @@ button:hover {
     color: red;
 
 }
+
 
 
 

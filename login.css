@@ -29,9 +29,12 @@ body {
 .overlay h1 {
     font-size: 100px;
     font-family:'Playfair Display',serif;
-    font-weight:900:
-    color: #ffcc00;
+    font-weight:900;
     letter-spacing:3px;
+
+    background:linear-gradient(45deg,#ff7e00,#ffcc00);
+    -webkit-background-clip:text;
+    -webkit-text-fill-colour:transparent;
 }
 
 .overlay p {
@@ -126,6 +129,7 @@ button:hover {
     color: red;
 
 }
+
 
 
 

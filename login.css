@@ -102,7 +102,7 @@ input {
     cursor: pointer;
 }
 
-button {
+.login-btn {
     width: 100%;
     padding: 12px;
     background: #ff7e00;
@@ -219,6 +219,7 @@ button:hover {
 .facebook-btn:hover {
     background: #145dc1;
 }
+
 
 
 

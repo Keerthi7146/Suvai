@@ -129,7 +129,30 @@ button:hover {
     text-align: center;
     margin-top: 10px;
     color: red;
+}
 
+/* Floating Logo */
+
+.login-card {
+    position: relative;
+}
+
+.logo-container {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: white;
+    padding: 5px;
+    border: 4px solid #d4af37;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
 

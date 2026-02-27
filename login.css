@@ -211,16 +211,24 @@ input {
     background: #000;
 }
 
+.delivery-container {
+    position: absolute;
+    bottom: 40px;
+    left: 60px;
+}
+
 .delivery-img {
     width: 180px;
     border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    transform: translateY(-10px);
-    transition: 0.3s ease;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    animation: float 3s ease-in-out infinite;
 }
 
-.delivery-img:hover {
-    transform: translateY(-15px) scale(1.05);
+/* Floating Animation */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
 }
 
 

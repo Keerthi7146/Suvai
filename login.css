@@ -58,7 +58,7 @@ body {
 }
 
 .login-card {
-    background: lightyellow;
+    background: black;
     padding: 40px;
     width: 350px;
     border-radius: 10px;
@@ -124,5 +124,6 @@ button:hover {
     color: red;
 
 }
+
 
 

@@ -27,7 +27,7 @@ body {
 }
 
 .overlay h1 {
-    font-size: 48px;
+    font-size: 100px;
     color: #ffcc00;
 }
 
@@ -122,4 +122,5 @@ button:hover {
     text-align: center;
     margin-top: 10px;
     color: red;
+
 }

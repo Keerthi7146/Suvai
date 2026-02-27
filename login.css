@@ -211,6 +211,17 @@ input {
     background: #000;
 }
 
+.delivery-img {
+    width: 180px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    transform: translateY(-10px);
+    transition: 0.3s ease;
+}
+
+.delivery-img:hover {
+    transform: translateY(-15px) scale(1.05);
+}
 
 
 

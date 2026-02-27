@@ -104,7 +104,8 @@ input {
 
 .login-btn {
     width: 100%;
-    padding: 12px;
+    height:45px;
+    padding: 0;
     background: #ff7e00;
     border: none;
     border-radius: 5px;
@@ -112,17 +113,6 @@ input {
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-}
-
-button:hover {
-    background: #c0392b;
-}
-
-.otp {
-    text-align: center;
-    margin-top: 10px;
-    color: #ff7e00;
-    cursor: pointer;
 }
 
 #message {
@@ -173,15 +163,16 @@ button:hover {
 }
 
 .social-login {
-    margin-top: 20px;
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
 }
 
 .google-btn,
 .facebook-btn {
     width:100%;
+    height:45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -219,6 +210,7 @@ button:hover {
 .facebook-btn:hover {
     background: #145dc1;
 }
+
 
 
 

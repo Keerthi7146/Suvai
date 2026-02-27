@@ -176,7 +176,7 @@ button:hover {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .google-btn,
@@ -219,6 +219,7 @@ button:hover {
 .facebook-btn:hover {
     background: #145dc1;
 }
+
 
 
 

@@ -84,6 +84,17 @@ body {
     from { opacity: 0; transform: translateX(50px); }
     to { opacity: 1; transform: translateX(0); }
 }
+@keyframes premiumFloat {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+    50% {
+        transform: translate(-40px, -30px) scale(1.05);
+    }
+    100% {
+        transform: translate(30px, 40px) scale(1);
+    }
+}
 
 .login-card h2 {
     text-align: center;
@@ -238,19 +249,23 @@ input {
     100% { transform: translateY(0px); }
 }
 
-/* Suvai Yellow Gradient Floating Dots */
 .right-section::before {
     content: "";
     position: absolute;
+    top: -50%;
+    left: -50%;
     width: 200%;
     height: 200%;
 
-    background-image: radial-gradient(circle, 
-        rgba(255,165,0,0.6) 2px, 
-        rgba(255,200,0,0.4) 4px,
-        transparent 6px
-    );
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,180,0,0.25) 0%, transparent 20%),
+        radial-gradient(circle at 70% 40%, rgba(255,150,0,0.2) 0%, transparent 25%),
+        radial-gradient(circle at 40% 70%, rgba(255,200,0,0.2) 0%, transparent 25%),
+        radial-gradient(circle at 80% 80%, rgba(255,170,0,0.2) 0%, transparent 20%);
 
+    animation: premiumFloat 25s ease-in-out infinite alternate;
+    z-index: 0;
+}
     background-size: 60px 60px;
     animation: moveDots 50s linear infinite;
 }
@@ -278,6 +293,7 @@ input {
        padding: 25px;
 }
 }
+
 
 
 

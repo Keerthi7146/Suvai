@@ -84,7 +84,7 @@ body {
     from { opacity: 0; transform: translateX(50px); }
     to { opacity: 1; transform: translateX(0); }
 }
-@keyframes premiumFloat {
+@keyframes premiumfloat {
     0% {
         transform: translate(0px, 0px) scale(1);
     }
@@ -263,7 +263,7 @@ input {
         radial-gradient(circle at 40% 70%, rgba(255,200,0,0.2) 0%, transparent 25%),
         radial-gradient(circle at 80% 80%, rgba(255,170,0,0.2) 0%, transparent 20%);
 
-    animation: premiumFloat 25s ease-in-out infinite alternate;
+    animation: premiumfloat 30s ease-in-out infinite alternate;
     z-index: 0;
 }
     background-size: 60px 60px;
@@ -293,6 +293,7 @@ input {
        padding: 25px;
 }
 }
+
 
 
 

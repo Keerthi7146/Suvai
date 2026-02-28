@@ -245,6 +245,21 @@ input {
     animation: float 6s ease-in-in-out infinite;
     z-index: 0;
 }
+@media (max-width: 768px) {
+
+    .container {
+        flex-direction: column;
+    }
+
+    .left-section,
+    .right-section {
+        width: 100%;
+    }
+    .login-card {
+       width: 90%;
+       padding: 25px;
+}
+}
 
 
 

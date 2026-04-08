@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suvai - Popular Daily Meals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL THEME --- */
+        body { 
+            background-color: #F5EDE1; color: #282c3f; 
+            font-family: 'Poppins', sans-serif; margin: 0; padding: 0;
+            overflow-x: hidden; scroll-behavior: smooth;
+        }
+
+        /* --- FLOATING ANIMATION --- */
+        @keyframes floatAlive {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- NAVBAR --- */
+        .startup-nav {
+            position: absolute; top: 0; left: 0; right: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 60px; z-index: 1000;
+        }
+        
+        .nav-left { display: flex; align-items: center; gap: 40px; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo img { height: 45px; width: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #fc8019; box-shadow: 0 4px 10px rgba(252, 128, 25, 0.3);}
+        .logo span { font-size: 28px; font-weight: 800; color: #fc8019; letter-spacing: -1px;}
+
+        .nav-menu { display: flex; gap: 25px; list-style: none; margin: 0; padding: 0; }
+        .nav-menu a { text-decoration: none; color: #3d4152; font-weight: 600; font-size: 15px; transition: all 0.3s ease; cursor: pointer;}
+        .nav-menu a:hover, .nav-menu a.active { color: #fc8019; }
+
+        .nav-right { display: flex; align-items: center; }
+        
+        .login-btn { 
+            background: #000000; color: #ffffff; padding: 12px 24px; 
+            border-radius: 6px; font-weight: 600; font-size: 15px; text-decoration: none; transition: 0.3s; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .login-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;}
+        .login-btn:hover { background: #fc8019; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(252, 128, 25, 0.3); }
+        
+        #logoutBtn { display: none; background: #e02a2a; }
+        #logoutBtn:hover { background: #c21d1d; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 75vh; background: url('image/hero_meals.jpg') no-repeat center center; background-size: cover;
+            position: relative; display: flex; align-items: center;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(245,237,225,1) 0%, rgba(245,237,225,0.95) 40%, rgba(245,237,225,0) 80%);
+        }
+        .hero-content {
+            position: relative; z-index: 2; padding-left: 60px; max-width: 700px;
+            margin-top: 20px; 
+            animation: floatAlive 4s ease-in-out infinite;
+        }
+        .hero-content h1 { font-size: 3.5em; font-weight: 700; color: #282c3f; line-height: 1.15; margin-bottom: 15px; letter-spacing: -1px; }
+        .hero-content h1 span { color: #fc8019; }
+        .hero-content p { font-size: 1.3em; color: #686b78; margin-bottom: 40px; font-weight: 400; line-height: 1.5; }
+
+        /* --- SECTIONS & CARDS --- */
+        .section-container { padding: 80px 20px; text-align: center; }
+        .section-container.gray-bg { background-color: #ebe2d3; } 
+        .section-title { font-size: 2.2em; font-weight: 800; color: #282c3f; margin-bottom: 50px; }
+
+        .grid-layout { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); 
+            gap: 35px; max-width: 1200px; margin: 0 auto;
+        }
+
+        /* Floating Cards */
+        .app-card {
+            background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.06); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; text-align: left; cursor: pointer; 
+            border: 1px solid rgba(0,0,0,0.04); display: flex; flex-direction: column; position: relative;
+            animation: floatAlive 5s ease-in-out infinite; 
+        }
+        .app-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); border-color: rgba(252, 128, 25, 0.3);}
+        
+        .card-badge {
+            position: absolute; top: 15px; left: 15px; padding: 5px 10px; border-radius: 6px;
+            font-size: 0.75em; font-weight: 700; color: #fff; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .badge-bestseller { background: #fc8019; }
+        .badge-veg { background: #24963f; }
+        .badge-protein { background: #e02a2a; }
+        .badge-new { background: #1877f2; }
+
+        .card-img { width: 100%; height: 180px; object-fit: cover; }
+        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 1.3em; font-weight: 800; color: #282c3f; margin: 0 0 8px 0; letter-spacing: -0.5px;}
+        .card-subtitle { font-size: 0.85em; color: #686b78; margin: 0 0 20px 0; line-height: 1.5; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px dashed #eaeaec; padding-top: 15px;}
+        .card-price { font-size: 1.3em; font-weight: 800; color: #282c3f; }
+        
+        .card-action { 
+            background: #fff; color: #fc8019; font-weight: 700; font-size: 0.9em; 
+            padding: 8px 18px; border: 2px solid #fc8019; border-radius: 8px; transition: 0.3s; cursor: pointer;
+        }
+        .app-card:hover .card-action { background: #fc8019; color: #fff; }
+
+        /* --- PREMIUM MODAL POP-UP --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(20, 22, 31, 0.85); backdrop-filter: blur(5px); z-index: 2000;
+            display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s ease-in-out;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal-content {
+            background: #ffffff; border-radius: 24px; width: 92%; max-width: 420px; overflow: hidden; position: relative; transform: scale(0.9); opacity: 0; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        .modal-overlay.open .modal-content { transform: scale(1); opacity: 1; }
+        .close-btn {
+            position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); color: #282c3f;
+            width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; cursor: pointer; z-index: 10; transition: 0.3s;
+        }
+        .close-btn:hover { background: #fc8019; color: #fff; transform: rotate(90deg); }
+        .modal-img-container { position: relative; }
+        .modal-img { width: 100%; height: 220px; object-fit: cover; }
+        .modal-badge { position: absolute; bottom: -14px; left: 25px; background: #fc8019; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 0.85em; font-weight: 700; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(252, 128, 25, 0.3);}
+        .modal-body { padding: 35px 25px 25px 25px; text-align: left; }
+        .modal-body h2 { margin: 0 0 8px 0; color: #282c3f; font-size: 1.7em; font-weight: 800; letter-spacing: -0.5px;}
+        .modal-body p { color: #686b78; line-height: 1.6; margin-bottom: 25px; font-size: 0.95em; }
+        .modal-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .m-price { font-size: 1.6em; font-weight: 800; color: #282c3f; }
+        .m-btn { 
+            width: 100%; background: #282c3f; color: #fff; border: none; padding: 16px; 
+            font-size: 1.1em; font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.3s; 
+        }
+        .m-btn:hover { background: #fc8019; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(252, 128, 25, 0.3);}
+
+        /* --- AUTH WARNING MODAL --- */
+        .auth-warning-content { 
+            text-align: center; padding: 35px 25px; background: #ffffff; 
+            border-radius: 16px; max-width: 360px;
+        }
+        .warning-icon-wrapper {
+            background: #fff5ed; width: 64px; height: 64px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto;
+        }
+        .warning-icon-wrapper img { width: 32px; height: auto; }
+        .auth-warning-content h2 { color: #282c3f; font-size: 1.4em; margin-bottom: 8px; font-weight: 700; letter-spacing: -0.3px;}
+        .auth-warning-content p { color: #686b78; margin-bottom: 25px; font-size: 0.9em; line-height: 1.5;}
+        
+        .auth-btn-primary {
+            display: inline-block; width: 100%; background-color: #fc8019; color: #fff; 
+            padding: 14px; border-radius: 8px; font-size: 1rem; text-align: center; font-weight: 700; 
+            text-decoration: none; transition: 0.2s; box-shadow: 0 4px 12px rgba(252, 128, 25, 0.2); 
+        }
+        .auth-btn-primary:hover { background-color: #e06a0b; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(252, 128, 25, 0.3); }
+
+        /* --- FOOTER --- */
+        .suvai-footer { background-color: #F5EDE1; padding: 60px 80px 40px 80px; border-top: 1px solid rgba(0,0,0,0.05); color: #3d4152; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; margin-bottom: 50px; }
+        .footer-col h4 { font-weight: 700; margin-bottom: 20px; font-size: 16px; color: #282c3f;}
+        .footer-col ul { list-style: none; padding: 0; margin: 0; }
+        .footer-col ul li { margin-bottom: 15px; }
+        .footer-col ul li a { color: #686b78; text-decoration: none; font-size: 14px; transition: 0.3s;}
+        .footer-col ul li a:hover { color: #282c3f; font-weight: 600;}
+        .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 10px;}
+        .footer-logo img { width: 40px; }
+        .footer-logo span { font-size: 24px; font-weight: 800; color: #fc8019; }
+        .app-download-bar { display: flex; justify-content: center; align-items: center; gap: 20px; padding-top: 40px; border-top: 1px solid rgba(0,0,0,0.05); }
+        .app-download-bar h3 { margin: 0; font-size: 20px; font-weight: 700; color: #282c3f;}
+        .store-btns { display: flex; gap: 15px; }
+        .store-btns img { height: 40px; cursor: pointer; transition: 0.3s; }
+        .store-btns img:hover { transform: scale(1.05); }
+        .social-icons-wrapper { display: flex; gap: 18px; color: #282c3f; }
+        .social-icons-wrapper svg { cursor: pointer; transition: 0.3s; }
+        .social-icons-wrapper svg:hover { color: #fc8019; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <nav class="startup-nav">
+        <div class="nav-left">
+            <a href="index.html" class="logo">
+                <img src="image/logo.png" alt="Suvai Logo" onerror="this.style.display='none'">
+                <span>Suvai</span> 
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="plans.html">Subscriptions</a></li>
+                <li><a href="meals.html" class="active">Popular Meals</a></li>
+                <li><a href="index.html#cities-section">Cities</a></li>
+                <li><a href="about.html">About Us</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" class="login-btn" id="loginBtn">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Login / Sign Up
+            </a>
+            <button class="login-btn" id="logoutBtn" onclick="logoutUser()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>A Menu For <span>Every Hour</span></h1>
+            <p>From crisp morning dosas to rich midnight biryanis. Explore our day-divided menu, prepared fresh for exactly when you need it.</p>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <h2 class="section-title">🌅 Morning Tiffin (7 AM - 11 AM)</h2>
+        <div class="grid-layout">
+            
+            <div class="app-card" onclick="protectAction('Classic Idli Sambar', '₹120', 'Soft, fluffy idlis served with organic vegetable sambar and fresh coconut chutney.', 'image/idli.jpg', 'meal')">
+                <div class="card-badge badge-bestseller">⭐ Bestseller</div>
+                <img src="image/idli.jpg" class="card-img" alt="Idli Sambar">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Classic Idli Sambar</h3>
+                        <p class="card-subtitle">South Indian • Light Breakfast</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹120</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Crispy Masala Dosa', '₹150', 'Golden crispy dosa stuffed with spiced potato filling, served with 3 chutneys.', 'image/dosa.jpg', 'meal')">
+                <div class="card-badge badge-veg">🥗 Pure Veg</div>
+                <img src="image/dosa.jpg" class="card-img" alt="Masala Dosa">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Crispy Masala Dosa</h3>
+                        <p class="card-subtitle">Classic Tamil Nadu Style</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹150</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Ghee Ven Pongal', '₹110', 'Hot, comforting pongal dripping with pure ghee, cashews, and black pepper.', 'image/pongal.jpg', 'meal')">
+                <img src="image/pongal.jpg" class="card-img" alt="Ven Pongal">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Ghee Ven Pongal</h3>
+                        <p class="card-subtitle">Traditional Temple Style</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹110</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Poori Masala', '₹130', 'Fluffy, oil-free hot pooris served with classic potato masala and onion.', 'image/poori.jpg', 'meal')">
+                <img src="image/poori.jpg" class="card-img" alt="Poori Masala">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Poori Masala</h3>
+                        <p class="card-subtitle">Kids Favorite • Freshly Fried</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹130</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section-container gray-bg">
+        <h2 class="section-title">🍱 Wholesome Lunch (12 PM - 3 PM)</h2>
+        <div class="grid-layout">
+            
+            <div class="app-card" onclick="protectAction('Indian Veg Meal', '₹299', 'A complete traditional meal featuring rich curries, dal, rice, and butter naan.', 'image/veg_meal.jpg', 'meal')">
+                <div class="card-badge badge-veg">🥗 Pure Veg</div>
+                <img src="image/veg_meal.jpg" class="card-img" alt="Veg Meal">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Indian Veg Meal</h3>
+                        <p class="card-subtitle">North Indian • Rich Curries</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹299</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Chicken Full Thali', '₹350', 'A massive thali with rice, chapati, chicken curry, chicken 65, and rasam.', 'image/chicken_thali.jpg', 'meal')">
+                <div class="card-badge badge-protein">💪 High Protein</div>
+                <img src="image/chicken_thali.jpg" class="card-img" alt="Chicken Thali">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Chicken Full Thali</h3>
+                        <p class="card-subtitle">Non-Veg • Heavy Meal</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹350</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Fish Curry Rice', '₹320', 'Authentic Chettinad fish curry made with tamarind and fresh catch of the day.', 'image/fish_meal.jpg', 'meal')">
+                <img src="image/fish_meal.jpg" class="card-img" alt="Fish Meal">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Fish Curry Rice</h3>
+                        <p class="card-subtitle">Seafood • Chettinad Style</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹320</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Egg Dum Biryani', '₹220', 'Fragrant basmati rice cooked in dum with spices and two boiled eggs.', 'image/egg_biryani.jpg', 'meal')">
+                <div class="card-badge badge-new">🔥 Fast Moving</div>
+                <img src="image/egg_biryani.jpg" class="card-img" alt="Egg Biryani">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Egg Dum Biryani</h3>
+                        <p class="card-subtitle">Biryani • Spiced Rice</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹220</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section-container">
+        <h2 class="section-title">☕ Evening Snacks (4 PM - 7 PM)</h2>
+        <div class="grid-layout">
+            
+            <div class="app-card" onclick="protectAction('Punjabi Samosa (2pcs)', '₹60', 'Crispy, flaky pastry filled with spiced potato and peas. Served with mint chutney.', 'image/samosa.jpg', 'meal')">
+                <div class="card-badge badge-bestseller">⭐ Popular</div>
+                <img src="image/samosa.jpg" class="card-img" alt="Samosa">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Punjabi Samosa</h3>
+                        <p class="card-subtitle">Hot & Crispy • Tea Time</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹60</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Medu Vada (2pcs)', '₹50', 'Deep fried urad dal batter, crispy on the outside, soft on the inside.', 'image/vada.jpg', 'meal')">
+                <img src="image/vada.jpg" class="card-img" alt="Vada">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Medu Vada</h3>
+                        <p class="card-subtitle">South Indian • Snack</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹50</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Onion Bajji Plate', '₹70', 'Freshly sliced onions dipped in besan batter and fried to golden perfection.', 'image/bajji.jpg', 'meal')">
+                <img src="image/bajji.jpg" class="card-img" alt="Bajji">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Onion Bajji Plate</h3>
+                        <p class="card-subtitle">Rainy Day Special</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹70</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Egg Puff', '₹40', 'Layers of buttery, flaky pastry stuffed with onion masala and half boiled egg.', 'image/puffs.jpg', 'meal')">
+                <div class="card-badge badge-protein">💪 Quick Bite</div>
+                <img src="image/puffs.jpg" class="card-img" alt="Puffs">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Egg Puff</h3>
+                        <p class="card-subtitle">Bakery Style • Flaky</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹40</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section-container gray-bg">
+        <h2 class="section-title">🌙 Delicious Dinner (8 PM - 11 PM)</h2>
+        <div class="grid-layout">
+            
+            <div class="app-card" onclick="protectAction('Paneer Butter Masala', '₹249', 'Our signature soft paneer cubes cooked in a rich, creamy tomato and cashew gravy.', 'image/paneer.jpg', 'meal')">
+                <div class="card-badge badge-veg">🥗 Pure Veg</div>
+                <img src="image/paneer.jpg" class="card-img" alt="Paneer">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Paneer Butter Masala</h3>
+                        <p class="card-subtitle">Creamy Tomato Gravy</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹249</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Chicken Biryani Bowl', '₹349', 'Aromatic basmati rice cooked with tender chicken pieces, special spices, served with raita.', 'image/biryani.jpg', 'meal')">
+                <div class="card-badge badge-bestseller">⭐ Bestseller</div>
+                <img src="image/biryani.jpg" class="card-img" alt="Biryani">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Chicken Biryani Bowl</h3>
+                        <p class="card-subtitle">Mughlai • High Protein</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹349</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Soft Chapati & Kurma', '₹140', '3 completely oil-free soft wheat chapatis served with mixed vegetable kurma.', 'image/chapati.jpg', 'meal')">
+                <img src="image/chapati.jpg" class="card-img" alt="Chapati">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Soft Chapati & Kurma</h3>
+                        <p class="card-subtitle">Light Dinner • Healthy</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹140</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-card" onclick="protectAction('Malabar Parotta & Salna', '₹160', '2 Flaky, layered Malabar parottas served with rich, spicy empty salna.', 'image/parotta.jpg', 'meal')">
+                <div class="card-badge badge-new">🔥 Local Favorite</div>
+                <img src="image/parotta.jpg" class="card-img" alt="Parotta">
+                <div class="card-body">
+                    <div>
+                        <h3 class="card-title">Malabar Parotta & Salna</h3>
+                        <p class="card-subtitle">Street Style • Indulgent</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-price">₹160</div>
+                        <button class="card-action">Add</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="suvai-footer" id="about-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <img src="image/logo.png" alt="Suvai Logo" onerror="this.style.display='none'">
+                    <span>Suvai</span>
+                </div>
+                <p style="color: #686b78; font-size: 14px; margin-top: 5px;">© 2026 Suvai Limited</p>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a onclick="protectLink('about.html')">About Us</a></li>
+                    <li><a href="#">Suvai Corporate</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Team</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li><a href="#">Help & Support</a></li>
+                    <li><a href="#">Partner Kitchens</a></li>
+                    <li><a href="#">Delivery Partners</a></li>
+                </ul>
+                <h4 style="margin-top: 35px;">Legal</h4>
+                <ul>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Available in:</h4>
+                <ul>
+                    <li><a href="#">Bangalore</a></li>
+                    <li><a href="#">Gurgaon</a></li>
+                    <li><a href="#">Hyderabad</a></li>
+                    <li><a href="#">Delhi</a></li>
+                    <li><a href="#">Mumbai</a></li>
+                    <li><a href="#">Chennai</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Life at Suvai</h4>
+                <ul>
+                    <li><a href="#">Our Chef Network</a></li>
+                    <li><a href="#">Customer Stories</a></li>
+                </ul>
+                <h4 style="margin-top: 35px;">Social Links</h4>
+                <div class="social-icons-wrapper">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                </div>
+            </div>
+        </div>
+        <div class="app-download-bar">
+            <h3>Manage your orders effortlessly, download the Suvai app</h3>
+            <div class="store-btns">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
+            </div>
+        </div>
+    </footer>
+
+    <div id="suvaiModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">✕</span>
+            <div class="modal-img-container">
+                <img id="modalImg" src="" class="modal-img">
+                <div class="modal-badge" id="modalBadge">Freshly Cooked</div>
+            </div>
+            <div class="modal-body">
+                <h2 id="modalTitle">Item Title</h2>
+                <p id="modalDesc">Description goes here.</p>
+                <div class="modal-price-row">
+                    <div>
+                        <span class="m-price" id="modalPrice">₹0</span>
+                    </div>
+                </div>
+                <button class="m-btn" id="modalActionBtn">Order Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="authWarningModal" class="modal-overlay">
+        <div class="modal-content auth-warning-content">
+            <span class="close-btn" onclick="closeAuthWarning()">✕</span>
+            <div class="warning-icon-wrapper">
+                <img src="image/3d-lock.png" alt="Secure Lock" onerror="this.style.display='none'">
+            </div>
+            <h2>Login Required</h2>
+            <p>Please log in to your account to explore our premium meal subscriptions and place orders.</p>
+            <div class="auth-buttons">
+                <a href="login.html" class="auth-btn-primary">Sign In to Continue</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suvai - Available Cities</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL THEME --- */
+        body { 
+            background-color: #F5EDE1; color: #282c3f; 
+            font-family: 'Poppins', sans-serif; margin: 0; padding: 0;
+            overflow-x: hidden; scroll-behavior: smooth;
+        }
+
+        /* --- FLOATING ANIMATION (FIXED TYPO HERE) --- */
+        @keyframes floatAlive {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); } 
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- NAVBAR --- */
+        .startup-nav {
+            position: absolute; top: 0; left: 0; right: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 60px; z-index: 1000;
+        }
+        
+        .nav-left { display: flex; align-items: center; gap: 40px; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo img { height: 45px; width: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #fc8019; box-shadow: 0 4px 10px rgba(252, 128, 25, 0.3);}
+        .logo span { font-size: 28px; font-weight: 800; color: #fc8019; letter-spacing: -1px;}
+
+        .nav-menu { display: flex; gap: 25px; list-style: none; margin: 0; padding: 0; }
+        .nav-menu a { text-decoration: none; color: #3d4152; font-weight: 600; font-size: 15px; transition: all 0.3s ease; cursor: pointer;}
+        .nav-menu a:hover, .nav-menu a.active { color: #fc8019; }
+
+        .nav-right { display: flex; align-items: center; gap: 20px; } 
+        
+        /* PREMIUM SEARCH BAR */
+        .search-container { position: relative; }
+        .search-bar {
+            padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid #d4d5d9;
+            background-color: rgba(255, 255, 255, 0.9); font-size: 14px; font-family: 'Poppins', sans-serif;
+            color: #282c3f; outline: none; transition: all 0.3s ease; width: 220px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .search-bar:focus {
+            border-color: #fc8019; width: 280px; background-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(252, 128, 25, 0.15);
+        }
+        .search-icon {
+            position: absolute; top: 50%; left: 12px; transform: translateY(-50%);
+            width: 18px; height: 18px; stroke: #686b78;
+        }
+
+        .login-btn { 
+            background: #000000; color: #ffffff; padding: 12px 24px; 
+            border-radius: 6px; font-weight: 600; font-size: 15px; text-decoration: none; transition: 0.3s; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .login-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;}
+        .login-btn:hover { background: #fc8019; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(252, 128, 25, 0.3); }
+        
+        #logoutBtn { display: none; background: #e02a2a; }
+        #logoutBtn:hover { background: #c21d1d; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 75vh; 
+            background: url('image/city_hero.jpg') no-repeat center center; 
+            background-size: cover;
+            position: relative; display: flex; align-items: center;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(245,237,225,1) 0%, rgba(245,237,225,0.95) 40%, rgba(245,237,225,0) 80%);
+        }
+        .hero-content {
+            position: relative; z-index: 2; padding-left: 60px; max-width: 700px;
+            margin-top: 40px; 
+            animation: floatAlive 4s ease-in-out infinite;
+        }
+        .hero-content h1 { font-size: 3.5em; font-weight: 700; color: #282c3f; line-height: 1.15; margin-bottom: 15px; letter-spacing: -1px; }
+        .hero-content h1 span { color: #fc8019; }
+        .hero-content p { font-size: 1.3em; color: #686b78; font-weight: 400; line-height: 1.5; }
+
+        /* --- CITIES SECTION & CARDS --- */
+        .section-container { padding: 80px 20px; text-align: center; }
+        .section-title { font-size: 2.2em; font-weight: 800; color: #282c3f; margin-bottom: 50px; }
+
+        .city-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+
+        .city-card {
+            background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.06); 
+            cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; text-align: left; border: 1px solid rgba(0,0,0,0.04);
+            animation: floatAlive 5s ease-in-out infinite; 
+        }
+        .city-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); border-color: rgba(36, 150, 63, 0.3);}
+        
+        .city-img-wrapper { position: relative; height: 200px; width: 100%; }
+        .city-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .city-img-wrapper::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 70%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+        
+        .city-overlay-text { position: absolute; bottom: 15px; left: 15px; z-index: 2; color: #fff; font-size: 1.6em; font-weight: 700; letter-spacing: -0.5px;}
+        .city-rating { position: absolute; bottom: 18px; right: 15px; z-index: 2; background: #24963f; color: #fff; font-size: 0.85em; font-weight: 700; padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 4px; }
+        
+        .city-details { padding: 15px 15px 10px 15px; display: flex; justify-content: space-between; align-items: center;}
+        .city-desc { color: #686b78; font-size: 0.85em; font-weight: 500; flex: 1;}
+        .city-explore-link { color: #3d4152; font-weight: 600; font-size: 0.95em; transition: 0.2s; background: #f4f7fc; padding: 6px 12px; border-radius: 6px;}
+        .city-card:hover .city-explore-link { color: #fff; background: #fc8019; }
+        
+        .city-offer { margin: 0 15px 15px 15px; padding: 10px; background: rgba(36, 150, 63, 0.08); color: #24963f; border-radius: 8px; font-size: 0.8em; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .city-offer-icon { background: #24963f; color: #fff; border-radius: 50%; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;}
+
+        /* --- PREMIUM MODAL POP-UP --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(20, 22, 31, 0.85); backdrop-filter: blur(5px); z-index: 2000;
+            display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s ease-in-out;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal-content {
+            background: #ffffff; border-radius: 24px; width: 92%; max-width: 420px; overflow: hidden; position: relative; transform: scale(0.9); opacity: 0; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        .modal-overlay.open .modal-content { transform: scale(1); opacity: 1; }
+        .close-btn {
+            position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); color: #282c3f;
+            width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; cursor: pointer; z-index: 10; transition: 0.3s;
+        }
+        .close-btn:hover { background: #fc8019; color: #fff; transform: rotate(90deg); }
+        .modal-img-container { position: relative; }
+        .modal-img { width: 100%; height: 220px; object-fit: cover; }
+        .modal-badge { position: absolute; bottom: -14px; left: 25px; background: #fc8019; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 0.85em; font-weight: 700; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(252, 128, 25, 0.3);}
+        .modal-body { padding: 35px 25px 25px 25px; text-align: left; }
+        .modal-body h2 { margin: 0 0 8px 0; color: #282c3f; font-size: 1.7em; font-weight: 800; letter-spacing: -0.5px;}
+        .modal-body p { color: #686b78; line-height: 1.6; margin-bottom: 25px; font-size: 0.95em; }
+        .modal-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .m-price { font-size: 1.6em; font-weight: 800; color: #282c3f; }
+        .m-btn { width: 100%; background: #fc8019; color: #fff; border: none; padding: 16px; font-size: 1.1em; font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(252, 128, 25, 0.3);}
+        .m-btn:hover { background: #e06a0b; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(252, 128, 25, 0.4);}
+
+        /* --- UPGRADED ADVANCED AUTH WARNING MODAL --- */
+        .auth-warning-content { text-align: center; padding: 40px 30px; background: #ffffff; border-radius: 20px; max-width: 400px; box-sizing: border-box; }
+        .warning-icon-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+        .warning-icon-wrapper img { width: 100px; height: auto; object-fit: contain; filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.1)); animation: floatAlive 3s ease-in-out infinite; }
+        .auth-warning-content h2 { color: #282c3f; font-size: 1.6em; margin-bottom: 10px; font-weight: 800;}
+        .auth-warning-content p { color: #686b78; margin-bottom: 30px; font-size: 0.95em; line-height: 1.5; padding: 0 10px;}
+        .auth-btn-primary { display: block; width: 100%; box-sizing: border-box; background-color: #fc8019; color: #fff; padding: 15px; border-radius: 10px; font-size: 1.05rem; text-align: center; font-weight: 700; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(252, 128, 25, 0.2); margin: 0; }
+        .auth-btn-primary:hover { background-color: #e06a0b; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(252, 128, 25, 0.3); }
+
+        /* --- FOOTER --- */
+        .suvai-footer { background-color: #F5EDE1; padding: 60px 80px 40px 80px; border-top: 1px solid rgba(0,0,0,0.05); color: #3d4152; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; margin-bottom: 50px; }
+        .footer-col h4 { font-weight: 700; margin-bottom: 20px; font-size: 16px; color: #282c3f;}
+        .footer-col ul { list-style: none; padding: 0; margin: 0; }
+        .footer-col ul li { margin-bottom: 15px; }
+        .footer-col ul li a { color: #686b78; text-decoration: none; font-size: 14px; transition: 0.3s;}
+        .footer-col ul li a:hover { color: #282c3f; font-weight: 600;}
+        .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 10px;}
+        .footer-logo img { width: 40px; }
+        .footer-logo span { font-size: 24px; font-weight: 800; color: #fc8019; }
+        .app-download-bar { display: flex; justify-content: center; align-items: center; gap: 20px; padding-top: 40px; border-top: 1px solid rgba(0,0,0,0.05); }
+        .app-download-bar h3 { margin: 0; font-size: 20px; font-weight: 700; color: #282c3f;}
+        .store-btns { display: flex; gap: 15px; }
+        .store-btns img { height: 40px; cursor: pointer; transition: 0.3s; }
+        .store-btns img:hover { transform: scale(1.05); }
+        .social-icons-wrapper { display: flex; gap: 18px; color: #282c3f; }
+        .social-icons-wrapper svg { cursor: pointer; transition: 0.3s; }
+        .social-icons-wrapper svg:hover { color: #fc8019; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <nav class="startup-nav">
+        <div class="nav-left">
+            <a href="index.html" class="logo">
+                <img src="image/logo.png" alt="Suvai Logo" onerror="this.style.display='none'">
+                <span>Suvai</span> 
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a onclick="protectLink('plans.html')">Subscriptions</a></li>
+                <li><a onclick="protectLink('meals.html')">Popular Meals</a></li>
+                <li><a href="city.html" class="active">Cities</a></li>
+                <li><a onclick="protectLink('about.html')">About Us</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="citySearch" class="search-bar" placeholder="Search your city..." onkeyup="filterCities()">
+            </div>
+
+            <a href="login.html" class="login-btn" id="loginBtn">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Login / Sign Up
+            </a>
+            <button class="login-btn" id="logoutBtn" onclick="logoutUser()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Find Suvai in <span>Your City</span></h1>
+            <p>From the streets of Delhi to the coasts of Kochi. Authentic, chef-prepared meals delivered fresh wherever you are.</p>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <h2 class="section-title">Available Nationwide</h2>
+        
+        <div class="city-grid" id="cityGridContainer">
+            
+            <div class="city-card" data-city="chennai" onclick="protectAction('Chennai', 'Authentic South Indian Flavors', 'Explore the rich culinary heritage of Chennai with our curated local specialties.', 'image/chennai.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/chennai.jpg" alt="Chennai">
+                    <div class="city-overlay-text">Chennai</div>
+                    <div class="city-rating">★ 4.8</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">South Indian • Traditional</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Flat 20% off on first order
+                </div>
+            </div>
+
+            <div class="city-card" data-city="mumbai" onclick="protectAction('Mumbai', 'Fast Delivery Across the City', 'From Vada Pav to premium Thalis, experience Mumbai\'s best food delivered hot.', 'image/mumbai.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/mumbai.jpg" alt="Mumbai">
+                    <div class="city-overlay-text">Mumbai</div>
+                    <div class="city-rating">★ 4.9</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Fast Food • Premium Thalis</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Up to 15% off with bank offers
+                </div>
+            </div>
+
+            <div class="city-card" data-city="delhi" onclick="protectAction('Delhi', 'Rich North Indian Feasts', 'Order incredible Chole Bhature, Butter Chicken and more anywhere in Delhi.', 'image/delhi.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/delhi.jpg" alt="Delhi">
+                    <div class="city-overlay-text">Delhi</div>
+                    <div class="city-rating">★ 4.7</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">North Indian • Mughlai</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Flat 10% off on walk-in
+                </div>
+            </div>
+
+            <div class="city-card" data-city="hyderabad" onclick="protectAction('Hyderabad', 'The City of Biryanis', 'Indulge in authentic Dum Biryani and local delicacies delivered straight to you.', 'image/hyderabad.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/hyderabad.jpg" alt="Hyderabad">
+                    <div class="city-overlay-text">Hyderabad</div>
+                    <div class="city-rating">★ 4.9</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Biryani • Local Delicacies</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Flat 30% off on pre-booking
+                </div>
+            </div>
+
+            <div class="city-card" data-city="bangalore" onclick="protectAction('Bangalore', 'Silicon Valley Favorites', 'High-protein, quick, and healthy meals perfectly balanced for busy professionals.', 'image/bangalore.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/bangalore.jpg" alt="Bangalore">
+                    <div class="city-overlay-text">Bangalore</div>
+                    <div class="city-rating">★ 4.8</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Healthy Bowls • Quick Eats</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Free Delivery all week
+                </div>
+            </div>
+
+            <div class="city-card" data-city="pune" onclick="protectAction('Pune', 'Maharashtrian & Healthy Diet Plans', 'Authentic Maharashtrian flavors mixed with modern nutrition for your daily needs.', 'image/pune.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/pune.jpg" alt="Pune">
+                    <div class="city-overlay-text">Pune</div>
+                    <div class="city-rating">★ 4.6</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Maharashtrian • Diet Plans</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Save 15% on monthly packs
+                </div>
+            </div>
+
+            <div class="city-card" data-city="kolkata" onclick="protectAction('Kolkata', 'Authentic Bengali Touches', 'Experience rich Bengali curries, mishti, and everyday wholesome meals delivered to you.', 'image/kolkata.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/kolkata.jpg" alt="Kolkata">
+                    <div class="city-overlay-text">Kolkata</div>
+                    <div class="city-rating">★ 4.8</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Bengali • Rich Curries</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Flat 10% off for students
+                </div>
+            </div>
+
+            <div class="city-card" data-city="ahmedabad" onclick="protectAction('Ahmedabad', 'Gujarati Specialties', 'Enjoy proper Gujarati Thalis and pure vegetarian daily meals made with love.', 'image/ahmedabad.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/ahmedabad.jpg" alt="Ahmedabad">
+                    <div class="city-overlay-text">Ahmedabad</div>
+                    <div class="city-rating">★ 4.9</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Gujarati Thalis • Pure Veg</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> 20% off on family packs
+                </div>
+            </div>
+
+            <div class="city-card" data-city="jaipur" onclick="protectAction('Jaipur', 'Rich Rajasthani Flavors', 'Dal Bati Churma and everyday balanced Rajasthani meals straight to your home.', 'image/jaipur.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/jaipur.jpg" alt="Jaipur">
+                    <div class="city-overlay-text">Jaipur</div>
+                    <div class="city-rating">★ 4.7</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Rajasthani • Rich Flavors</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Festival discounts active
+                </div>
+            </div>
+
+            <div class="city-card" data-city="lucknow" onclick="protectAction('Lucknow', 'Awadhi Delicacies', 'Perfectly balanced Awadhi delicacies and kebabs for your daily protein intake.', 'image/lucknow.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/lucknow.jpg" alt="Lucknow">
+                    <div class="city-overlay-text">Lucknow</div>
+                    <div class="city-rating">★ 4.8</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Awadhi Cuisine • High Protein</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Flat 10% off for members
+                </div>
+            </div>
+
+            <div class="city-card" data-city="chandigarh" onclick="protectAction('Chandigarh', 'Hearty Punjabi Meals', 'Rich, buttery, and hearty Punjabi meals delivered piping hot to your doorstep.', 'image/chandigarh.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/chandigarh.jpg" alt="Chandigarh">
+                    <div class="city-overlay-text">Chandigarh</div>
+                    <div class="city-rating">★ 4.9</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Punjabi • Large Portions</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Buy 1 Get 1 on first plan
+                </div>
+            </div>
+
+            <div class="city-card" data-city="kochi" onclick="protectAction('Kochi', 'Traditional Kerala Style', 'Authentic Kerala meals with the richness of coconut and fresh coastal spices.', 'image/kochi.jpg', 'city')">
+                <div class="city-img-wrapper">
+                    <img src="image/kochi.jpg" alt="Kochi">
+                    <div class="city-overlay-text">Kochi</div>
+                    <div class="city-rating">★ 4.7</div>
+                </div>
+                <div class="city-details">
+                    <div class="city-desc">Kerala Style • Coastal Spices</div>
+                    <div class="city-explore-link">Explore ➔</div>
+                </div>
+                <div class="city-offer">
+                    <span class="city-offer-icon">%</span> Free delivery all month
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="suvai-footer" id="about-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <img src="image/logo.png" alt="Suvai Logo" onerror="this.style.display='none'">
+                    <span>Suvai</span>
+                </div>
+                <p style="color: #686b78; font-size: 14px; margin-top: 5px;">© 2026 Suvai Limited</p>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a onclick="protectLink('about.html')">About Us</a></li>
+                    <li><a href="#">Suvai Corporate</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Team</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li><a href="#">Help & Support</a></li>
+                    <li><a href="#">Partner Kitchens</a></li>
+                    <li><a href="#">Delivery Partners</a></li>
+                </ul>
+                <h4 style="margin-top: 35px;">Legal</h4>
+                <ul>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Available in:</h4>
+                <ul>
+                    <li><a href="#">Bangalore</a></li>
+                    <li><a href="#">Gurgaon</a></li>
+                    <li><a href="#">Hyderabad</a></li>
+                    <li><a href="#">Delhi</a></li>
+                    <li><a href="#">Mumbai</a></li>
+                    <li><a href="#">Chennai</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Life at Suvai</h4>
+                <ul>
+                    <li><a href="#">Our Chef Network</a></li>
+                    <li><a href="#">Customer Stories</a></li>
+                </ul>
+                <h4 style="margin-top: 35px;">Social Links</h4>
+                <div class="social-icons-wrapper">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                </div>
+            </div>
+        </div>
+        
+        <div class="app-download-bar">
+            <h3>Manage your subscription effortlessly, download the Suvai app</h3>
+            <div class="store-btns">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
+            </div>
+        </div>
+    </footer>
+
+    <div id="suvaiModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">✕</span>
+            <div class="modal-img-container">
+                <img id="modalImg" src="" class="modal-img">
+                <div class="modal-badge" id="modalBadge">City Hub</div>
+            </div>
+            <div class="modal-body">
+                <h2 id="modalTitle">Item Title</h2>
+                <p id="modalDesc">Description goes here.</p>
+                <div class="modal-price-row">
+                    <div><span class="m-price" id="modalPrice">₹0</span></div>
+                </div>
+                <button class="m-btn" id="modalActionBtn">Subscribe Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="authWarningModal" class="modal-overlay">
+        <div class="modal-content auth-warning-content">
+            <span class="close-btn" onclick="closeAuthWarning()">✕</span>
+            <div class="warning-icon-wrapper">
+                <img src="image/3d-lock.png" alt="Secure Lock" onerror="this.style.display='none'">
+            </div>
+            <h2>Login Required</h2>
+            <p>Please log in to your account to explore our premium meal subscriptions and place orders.</p>
+            <div class="auth-buttons">
+                <a href="login.html" class="auth-btn-primary">Sign In to Continue</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+
+    <script>
+        function filterCities() {
+            let input = document.getElementById('citySearch').value.toLowerCase();
+            let cityCards = document.querySelectorAll('.city-card');
+            
+            cityCards.forEach(function(card) {
+                let cityName = card.getAttribute('data-city').toLowerCase();
+                
+                if (cityName.includes(input)) {
+                    card.style.display = ""; 
+                } else {
+                    card.style.display = "none"; 
+                }
+            });
+        }
+    </script>
+</body>
+</html>

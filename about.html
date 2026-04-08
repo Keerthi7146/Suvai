@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Suvai: Our Legacy, Mission, and Scale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL THEME --- */
+        body { 
+            background-color: #F5EDE1; color: #282c3f; 
+            font-family: 'Poppins', sans-serif; margin: 0; padding: 0;
+            overflow-x: hidden; scroll-behavior: smooth;
+        }
+
+        :root {
+            --startup-blue: #1a1c29;
+            --orange: #fc8019;
+            --white: #ffffff;
+            --text-gray: #686b78;
+        }
+
+        @keyframes floatAlive {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- NAVBAR ( Continuity: Sleeveless/Seamless like Home Page) --- */
+        .startup-nav {
+            position: absolute; top: 0; left: 0; right: 0; /* Makes it sit over the hero */
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 60px; z-index: 1000;
+            background-color: transparent; /* Removed solid white box */
+        }
+        
+        .nav-left { display: flex; align-items: center; gap: 40px; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo img { height: 45px; width: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); background-color: transparent; }
+        .logo span { font-size: 28px; font-weight: 800; color: var(--orange); letter-spacing: -1px;}
+
+        .nav-menu { display: flex; gap: 25px; list-style: none; margin: 0; padding: 0; }
+        /* Text made white to be readable over the dark blue hero, matching the split aesthetic */
+        .nav-menu a { text-decoration: none; color: rgba(255,255,255,0.8); font-weight: 600; font-size: 15px; transition: all 0.3s ease; cursor: pointer;}
+        .nav-menu a:hover, .nav-menu a.active { color: var(--orange); }
+
+        .nav-right { display: flex; align-items: center; }
+        
+        /* AUTHENTICATION STATE HANDLING (Compulsory Logout Button) */
+        #loginBtn { display: none; } /* User is logged in to see this prestigous page */
+        #logoutBtn { display: flex; background: #e02a2a; color: #ffffff; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 15px; text-decoration: none; transition: 0.3s; cursor: pointer; align-items: center; gap: 8px; border: none;}
+        #logoutBtn:hover { background: #c21d1d; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(224, 42, 42, 0.3); }
+
+        /* ========================================= */
+        /* --- CREATIVE HERO SECTION (Split Aesthetic) --- */
+        /* ========================================= */
+        .about-hero {
+            position: relative;
+            background-color: var(--startup-blue);
+            color: #ffffff;
+            height: 90vh; /* Immersive, filled space modern feel */
+            padding: 0 60px;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        
+        /* Diagonal Angle Background Design (as requested from png/webp references) */
+        .about-hero::after {
+            content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
+            background-color: #ffffff;
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+            z-index: 1;
+        }
+
+        .hero-text-panel {
+            position: relative; z-index: 2;
+            max-width: 48%;
+        }
+        .hero-text-panel h1 {
+            font-size: 4.5em; font-weight: 800; line-height: 1.1;
+            margin-bottom: 20px; letter-spacing: -2px;
+        }
+        .hero-text-panel h1 span { color: var(--orange); }
+        .hero-text-panel p {
+            font-size: 1.3em; color: #d4d5d9; max-width: 550px;
+            line-height: 1.6; font-weight: 400;
+        }
+
+        .hero-visual-panel {
+            position: relative; z-index: 2;
+            width: 48%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        /* Style of modern product render container from refs */
+        .modern-render-container {
+            width: 90%; height: auto; text-align: center;
+        }
+        .modern-render-image {
+            max-width: 90%; height: auto;
+            filter: drop-shadow(0px 15px 30px rgba(0,0,0,0.3));
+            animation: floatAlive 5s ease-in-out infinite;
+        }
+
+
+        /* ========================================= */
+        /* --- HOW SUVAI WORKS (Detailed Timeline) --- */
+        /* ========================================= */
+        .how-works-section {
+            padding: 100px 60px;
+            background-color: var(--white);
+            text-align: center;
+        }
+        .section-header-orange {
+            font-size: 3.5em; font-weight: 800; color: var(--startup-blue);
+            margin-bottom: 80px; letter-spacing: -1px;
+        }
+
+        .timeline-container {
+            display: flex; flex-direction: column; gap: 50px;
+            max-width: 1100px; margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Timeline Vertical Line */
+        .timeline-container::before {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+            width: 2px; background-color: #eaeaec; transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex; align-items: center; justify-content: space-between;
+            position: relative; z-index: 2;
+        }
+        /* Alternating sides based on ref aesthetic */
+        .timeline-item.left { flex-direction: row-reverse; }
+
+        .timeline-content {
+            width: 42%;
+            background: #F5EDE1; border-radius: 16px; padding: 35px;
+            border: 1px solid rgba(0,0,0,0.03); text-align: left;
+            transition: 0.3s ease;
+        }
+        .timeline-item:hover .timeline-content {
+            background-color: #ffffff;
+            transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-color: var(--orange);
+        }
+
+        .timeline-center-dot {
+            width: 50px; height: 50px; background-color: #fff;
+            border: 5px solid var(--orange); border-radius: 50%;
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2em; font-weight: 800; color: var(--startup-blue); z-index: 5;
+        }
+
+        .timeline-content h3 { font-size: 1.8em; font-weight: 800; color: var(--startup-blue); margin-bottom: 10px; letter-spacing: -0.5px;}
+        .timeline-content p { font-size: 1.05em; color: var(--text-gray); line-height: 1.7; margin: 0;}
+        
+        .timeline-side-graphic {
+            width: 42%; text-align: center;
+        }
+        .timeline-graphic-placeholder {
+            width: 100px; height: 100px; background-color: #f4f7fc; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+        /* Specific Vibrant PNG required here */
+        .timeline-graphic-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+
+
+        /* ========================================= */
+        /* --- THE FLEET (Detailed Delivery Section) --- */
+        /* ========================================= */
+        .fleet-section {
+            padding: 100px 60px;
+            background-color: #F5EDE1;
+            display: flex; align-items: center; gap: 60px;
+        }
+        
+        .fleet-text { flex: 1; }
+        .fleet-text h2 { font-size: 3em; font-weight: 800; color: var(--startup-blue); margin-bottom: 25px; letter-spacing: -1px; }
+        .fleet-text p { font-size: 1.15em; color: var(--text-gray); line-height: 1.8; margin-bottom: 30px; }
+        
+        .feature-check-list { list-style: none; padding: 0; margin: 0; }
+        .feature-check-list li {
+            display: flex; align-items: center; gap: 15px;
+            font-size: 1.1em; font-weight: 600; color: var(--startup-blue); margin-bottom: 20px;
+        }
+        .feature-check-list li span { color: #24963f; font-weight: 800; font-size: 1.2em; }
+
+        .fleet-visual-container {
+            width: 450px; height: 450px;
+            position: relative;
+            background: #ffffff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 8px solid #fff;
+            animation: floatAlive 6s ease-in-out infinite;
+            overflow: hidden;
+        }
+        /* Startup render visual container for a vehicle/bike: Vibrant PNG titled delivery_fleet_scooter.png REQUIRED */
+        .fleet-visual-container img {
+            max-width: 90%; height: auto;
+            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.1));
+        }
+
+
+        /* ========================================= */
+        /* --- KEY METRICS (Exact Numbers - Home Style, merged लुक) --- */
+        /* ========================================= */
+        .metrics-section {
+            background-color: var(--startup-blue);
+            color: #ffffff;
+            padding: 80px 60px;
+            text-align: center;
+        }
+        .metrics-section h2 { font-size: 2.8em; font-weight: 800; margin-bottom: 60px; letter-spacing: -1px; }
+
+        .metrics-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;
+            max-width: 1200px; margin: 0 auto;
+        }
+
+        /* Number style inspired by startup dashboards - Bold & Merged */
+        .metric-item .big-number {
+            font-size: 5em; font-weight: 800; color: var(--orange);
+            line-height: 1; margin-bottom: 10px; letter-spacing: -3px;
+        }
+        .metric-item .metric-label {
+            font-size: 1.1em; font-weight: 500; color: #d4d5d9; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+
+        /* ========================================= */
+        /* --- FINAL STARTUP BLOCK (No Footer Below) --- */
+        /* ========================================= */
+        .startup-final-block {
+            background-color: #F5EDE1;
+            padding: 100px 60px 60px 60px;
+            text-align: center;
+        }
+        .startup-final-block h2 {
+            font-size: 3.5em; font-weight: 800; color: var(--startup-blue);
+            margin-bottom: 20px; letter-spacing: -1px;
+        }
+        .startup-final-block p {
+            font-size: 1.3em; color: #text-gray; max-width: 750px; margin: 0 auto 50px auto;
+            line-height: 1.6;
+        }
+        .btn-large {
+            display: inline-block; background-color: var(--orange); color: #fff;
+            padding: 20px 50px; border-radius: 12px; font-weight: 700; font-size: 1.25em;
+            text-decoration: none; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(252, 128, 25, 0.4);
+        }
+        .btn-large:hover { background-color: #e06a0b; transform: translateY(-3px); }
+
+        .simple-copyright {
+            margin-top: 80px; font-size: 14px; color: #93959f;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="startup-nav">
+        <div class="nav-left">
+            <a href="index.html" class="logo">
+                <img src="image/logo.png" alt="Suvai Logo" onerror="this.style.display='none'">
+                <span>Suvai</span> 
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="plans.html">Subscriptions</a></li>
+                <li><a href="meals.html">Meals</a></li>
+                <li><a href="city.html">Cities</a></li>
+                <li><a href="about.html" class="active">About Us</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" class="login-btn" id="loginBtn">Login / Sign Up</a>
+            <button id="logoutBtn" onclick="logoutUser()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="about-hero">
+        <div class="hero-text-panel">
+            <h1>Suvai: Reviving the Taste of <span>Home</span></h1>
+            <p>Our legacy is defined by authenticity. We connect thousands of food-tech subscribers with curated regional masters, delivering homestyle nutrition daily without compromise.</p>
+        </div>
+        <div class="hero-visual-panel">
+            <div class="modern-render-container">
+                <img src="image/visual_hero_culinary.png" class="modern-render-image" alt="Sleek Suvai Culinary Render" onerror="this.src='image/logo.png'; this.style.opacity='0.2'">
+            </div>
+        </div>
+    </div>
+
+    <div class="how-works-section">
+        <h2 class="section-header-orange">Our Scaled Operation, Sorted</h2>
+        <div class="timeline-container">
+            
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <h3>1. Pure Ingredient Sourcing</h3>
+                    <p>We leverage local, farm-fresh networks to source pristine ingredients daily. We reject the generic, emphasizing quality that reflects true culinary heritage.</p>
+                </div>
+                <div class="timeline-side-graphic">
+                    <div class="timeline-graphic-placeholder">
+                        <img src="image/timeline_step1_harvest.png" alt="Fresh Harvest Sourcing" onerror="this.src='image/logo.png'">
+                    </div>
+                </div>
+                <div class="timeline-center-dot">01</div>
+            </div>
+
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <h3>2. Expert Regional Preparation</h3>
+                    <p>Meals are prepared in a sterile, professional environment by curated chefs specialising in their regional cuisines, preserving authentic traditional methods.</p>
+                </div>
+                <div class="timeline-side-graphic">
+                    <div class="timeline-graphic-placeholder">
+                        <img src="image/timeline_step2_chef.png" alt="Chef Culinary Preparation" onerror="this.src='image/logo.png'">
+                    </div>
+                </div>
+                <div class="timeline-center-dot">02</div>
+            </div>
+
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <h3>3. Smart, Sterile Packaging</h3>
+                    <p>Leveraging food-tech innovation, meals are sealed in spill-proof, eco-friendly, and temperature-controlled containers within fulfillment centers, ready for dispatch.</p>
+                </div>
+                <div class="timeline-side-graphic">
+                    <div class="timeline-graphic-placeholder">
+                        <img src="image/timeline_step3_packaging.png" alt="Smart sterile packaging" onerror="this.src='image/logo.png'">
+                    </div>
+                </div>
+                <div class="timeline-center-dot">03</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="fleet-section">
+        <div class="fleet-text">
+            <h2>The Promise: Suvai Delivery Fleet</h2>
+            <p>Our directly employed delivery fleet is the engine of our reliability. We prioritize technology to minimize transit time and guarantee the condition of the homestyle meal when it arrives.</p>
+            <ul class="feature-check-list">
+                <li><span>✔</span> Temperature-controlled logistics ensures food arrives hot.</li>
+                <li><span>✔</span> Advanced routing reduces delivery time sub-30 minutes post-pickup.</li>
+                <li><span>✔</span> Hygiene verified partners ensure ultimate safety.</li>
+            </ul>
+        </div>
+        <div class="fleet-visual-container">
+            <img src="image/delivery_fleet_scooter.png" alt="Suvai Delivery Scooter Render" onerror="this.src='image/logo.png'">
+        </div>
+    </div>
+
+    <div class="metrics-section">
+        <h2>Key Scale Metrics (Q2 2026)</h2>
+        <div class="metrics-grid">
+            
+            <div class="metric-item">
+                <div class="big-number">15K+</div>
+                <div class="metric-label">Daily Subscribers</div>
+            </div>
+
+            <div class="metric-item">
+                <div class="big-number">120+</div>
+                <div class="metric-label">Curated Kitchens</div>
+            </div>
+
+            <div class="metric-item">
+                <div class="big-number">800+</div>
+                <div class="metric-label">Delivery Fleet</div>
+            </div>
+
+            <div class="metric-item">
+                <div class="big-number">12</div>
+                <div class="metric-label">Major Cities</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="startup-final-block">
+        <h2>Sorted Daily Nutrition.<br> Sorced with Legacy.</h2>
+        <p>Simplifying your life should not mean compromising authenticity. Experience culinary integrity and technological efficiency, delivered. Join thousands of sorted subscribers.</p>
+        <a href="plans.html" class="btn-large">Explore Subscription Plans ➔</a>
+        
+        <p class="simple-copyright">© 2026 Suvai Technologies Limited. Innovation in Daily Nutrition.</p>
+    </div>
+
+    <script src="index.js"></script>
+
+</body>
+</html>
